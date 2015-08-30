@@ -242,4 +242,25 @@ public class MainHandler {
 		 */
 		return RESPONSE;
 	}
+
+	@GET
+	@Path("test-13")
+	public String fullFlowWithOneEventInSeparateTransaction() {
+		events.saveStartEvent("full flow with one event in separate transaction"); //rollback
+		events.saveNewTransactionEvent(); //saved
+		events.throwEjbException(true);
+		/**
+		 * INFO  [pl.vgtworld.test.ejbtransactions.services.EventsService] (default task-17) Save start event
+		 * INFO  [pl.vgtworld.test.ejbtransactions.services.EventsService] (default task-17) Save new transaction event
+		 * INFO  [pl.vgtworld.test.ejbtransactions.services.EventsService] (default task-17) Throw ejb exception: true
+		 * ERROR [org.jboss.as.ejb3] (default task-17) javax.ejb.EJBTransactionRolledbackException
+		 * ERROR [org.jboss.as.ejb3.invocation] (default task-17) JBAS014134:
+		 *       EJB Invocation failed on component EventsService for method
+		 *       public void pl.vgtworld.test.ejbtransactions.services.EventsService.throwEjbException(boolean):
+		 *       javax.ejb.EJBTransactionRolledbackException
+		 * Caused by: pl.vgtworld.test.ejbtransactions.exceptions.MyEjbException
+		 */
+		events.saveEndEvent(); //not executed
+		return RESPONSE;
+	}
 }

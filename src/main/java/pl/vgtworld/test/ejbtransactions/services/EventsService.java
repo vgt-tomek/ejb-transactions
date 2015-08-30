@@ -8,6 +8,8 @@ import pl.vgtworld.test.ejbtransactions.exceptions.MyRuntimeException;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import java.util.Date;
 
 @Stateless
@@ -29,6 +31,12 @@ public class EventsService {
 	public void saveEndEvent() {
 		LOGGER.info("Save end event");
 		events.createEvent("end");
+	}
+
+	@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+	public void saveNewTransactionEvent() {
+		LOGGER.info("Save new transaction event");
+		events.createEvent("new transaction event");
 	}
 
 	public void throwEjbException(boolean state) {
