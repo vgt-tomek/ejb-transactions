@@ -3,6 +3,7 @@ package pl.vgtworld.test.ejbtransactions.handlers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.vgtworld.test.ejbtransactions.exceptions.MyEjbException;
+import pl.vgtworld.test.ejbtransactions.exceptions.MyRuntimeException;
 import pl.vgtworld.test.ejbtransactions.services.EventsService;
 
 import javax.ejb.EJB;
@@ -50,4 +51,35 @@ public class MainHandler {
 		events.saveEndEvent(); //not executed
 		return RESPONSE;
 	}
+
+	@GET
+	@Path("test-4")
+	public String runtimeExceptionBetweenCalls() {
+		events.saveStartEvent(); //rollback
+		events.throwRuntimeException(true);
+		events.saveEndEvent(); //not executed
+		return RESPONSE;
+	}
+
+	@GET
+	@Path("test-5")
+	public String catchedRuntimeExceptionBetweenCalls() {
+		events.saveStartEvent(); //rollback
+		try {
+			events.throwRuntimeException(true);
+			/**
+			 * ERROR [org.jboss.as.ejb3] (default task-37) javax.ejb.EJBTransactionRolledbackException
+			 * ERROR [org.jboss.as.ejb3.invocation] (default task-37) JBAS014134: EJB Invocation failed on component
+			 *       EventsService for method public void
+			 *       pl.vgtworld.test.ejbtransactions.services.EventsService.throwRuntimeException(boolean):
+			 *       javax.ejb.EJBTransactionRolledbackException
+			 * Caused by: pl.vgtworld.test.ejbtransactions.exceptions.MyRuntimeException
+			 */
+		} catch (MyRuntimeException e) {
+			LOGGER.warn("Catched runtime exception"); //not executed
+		}
+		events.saveEndEvent();
+		return RESPONSE;
+	}
+
 }

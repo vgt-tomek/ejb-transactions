@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.vgtworld.test.ejbtransactions.dao.EventsDao;
 import pl.vgtworld.test.ejbtransactions.exceptions.MyEjbException;
+import pl.vgtworld.test.ejbtransactions.exceptions.MyRuntimeException;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -32,4 +33,12 @@ public class EventsService {
 			throw new MyEjbException();
 		}
 	}
+
+	public void throwRuntimeException(boolean state) {
+		LOGGER.info("Throw runtime exception: {}", state);
+		if (state) {
+			throw new MyRuntimeException();
+		}
+	}
+
 }
