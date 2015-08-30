@@ -63,6 +63,7 @@ public class EventsService {
 	}
 
 	public void saveIncorrectEventThrowingPersistenceException() {
+		LOGGER.info("Save incorrect event");
 		events.createEvent(new Date(), null);
 	}
 

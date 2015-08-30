@@ -24,6 +24,10 @@ public class MainHandler {
 
 	@GET
 	@Path("test-1")
+	/**
+	 * INFO  [pl.vgtworld.test.ejbtransactions.services.EventsService] (default task-1) Save start event
+	 * INFO  [pl.vgtworld.test.ejbtransactions.services.EventsService] (default task-1) Save end event
+	 */
 	public String cleanFlow() {
 		events.saveStartEvent("clean flow");
 		events.saveEndEvent();
@@ -36,6 +40,8 @@ public class MainHandler {
 		events.saveStartEvent("ejb exception between calls"); //rollback
 		events.throwEjbException(true);
 		/**
+		 * INFO  [pl.vgtworld.test.ejbtransactions.services.EventsService] (default task-41) Save start event
+		 * INFO  [pl.vgtworld.test.ejbtransactions.services.EventsService] (default task-41) Throw ejb exception: true
 		 * ERROR [org.jboss.as.ejb3] (default task-41) javax.ejb.EJBTransactionRolledbackException
 		 * ERROR [org.jboss.as.ejb3.invocation] (default task-41) JBAS014134: EJB Invocation failed on component
 		 *       EventsService for method public void
@@ -54,6 +60,8 @@ public class MainHandler {
 		try {
 			events.throwEjbException(true);
 			/**
+			 * INFO  [pl.vgtworld.test.ejbtransactions.services.EventsService] (default task-40) Save start event
+			 * INFO  [pl.vgtworld.test.ejbtransactions.services.EventsService] (default task-40) Throw ejb exception: true
 			 * ERROR [org.jboss.as.ejb3] (default task-40) javax.ejb.EJBTransactionRolledbackException
 			 * ERROR [org.jboss.as.ejb3.invocation] (default task-40) JBAS014134: EJB Invocation failed on component
 			 *       EventsService for method public void
@@ -74,6 +82,8 @@ public class MainHandler {
 		events.saveStartEvent("runtime exception between calls"); //rollback
 		events.throwRuntimeException(true);
 		/**
+		 * INFO  [pl.vgtworld.test.ejbtransactions.services.EventsService] (default task-39) Save start event
+		 * INFO  [pl.vgtworld.test.ejbtransactions.services.EventsService] (default task-39) Throw runtime exception: true
 		 * ERROR [org.jboss.as.ejb3] (default task-39) javax.ejb.EJBTransactionRolledbackException
 		 * ERROR [org.jboss.as.ejb3.invocation] (default task-39) JBAS014134: EJB Invocation failed on component
 		 *       EventsService for method public void
@@ -92,6 +102,8 @@ public class MainHandler {
 		try {
 			events.throwRuntimeException(true);
 			/**
+			 * INFO  [pl.vgtworld.test.ejbtransactions.services.EventsService] (default task-37) Save start event
+			 * INFO  [pl.vgtworld.test.ejbtransactions.services.EventsService] (default task-37) Throw runtime exception: true
 			 * ERROR [org.jboss.as.ejb3] (default task-37) javax.ejb.EJBTransactionRolledbackException
 			 * ERROR [org.jboss.as.ejb3.invocation] (default task-37) JBAS014134: EJB Invocation failed on component
 			 *       EventsService for method public void
@@ -108,6 +120,12 @@ public class MainHandler {
 
 	@GET
 	@Path("test-6")
+	/**
+	 * INFO  [pl.vgtworld.test.ejbtransactions.services.EventsService] (default task-9) Save start event
+	 * INFO  [pl.vgtworld.test.ejbtransactions.services.EventsService] (default task-9) Throw ejb exception: true
+	 * WARN  [pl.vgtworld.test.ejbtransactions.services.EventsService] (default task-9) Catched ejb exception
+	 * INFO  [pl.vgtworld.test.ejbtransactions.services.EventsService] (default task-9) Save end event
+	 */
 	public String fullFlowWitchCatchedEjbExceptionInside() {
 		events.saveFullFlowWithCatchedEjbException();
 		return RESPONSE;
@@ -115,6 +133,12 @@ public class MainHandler {
 
 	@GET
 	@Path("test-7")
+	/**
+	 * INFO  [pl.vgtworld.test.ejbtransactions.services.EventsService] (default task-10) Save start event
+	 * INFO  [pl.vgtworld.test.ejbtransactions.services.EventsService] (default task-10) Throw runtime exception: true
+	 * WARN  [pl.vgtworld.test.ejbtransactions.services.EventsService] (default task-10) Catched runtime exception
+	 * INFO  [pl.vgtworld.test.ejbtransactions.services.EventsService] (default task-10) Save end event
+	 */
 	public String fullFlowWitchCatchedRuntimeExceptionInside() {
 		events.saveFullFlowWithCatchedRuntimeException();
 		return RESPONSE;
@@ -126,14 +150,23 @@ public class MainHandler {
 		events.saveStartEvent("persistence exception between calls"); //rollback
 		events.saveIncorrectEventThrowingPersistenceException();
 		/**
-		 * ERROR [org.hibernate.engine.jdbc.spi.SqlExceptionHelper] (default task-2) Column 'event_name' cannot be null
-		 * ERROR [org.jboss.as.ejb3] (default task-2) javax.ejb.EJBTransactionRolledbackException:
-		 *       org.hibernate.exception.ConstraintViolationException: could not execute statement
+		 * INFO  [pl.vgtworld.test.ejbtransactions.services.EventsService] (default task-11) Save start event
+		 * INFO  [pl.vgtworld.test.ejbtransactions.services.EventsService] (default task-11) Save incorrect event
+		 * WARN  [org.hibernate.engine.jdbc.spi.SqlExceptionHelper] (default task-11) SQL Error: 1048, SQLState: 23000
+		 * ERROR [org.hibernate.engine.jdbc.spi.SqlExceptionHelper] (default task-11) Column 'event_name' cannot be null
+		 * ERROR [org.jboss.as.ejb3] (default task-11)
+		 *       javax.ejb.EJBTransactionRolledbackException: org.hibernate.exception.ConstraintViolationException:
+		 *       could not execute statement
+		 * ERROR [org.jboss.as.ejb3.invocation] (default task-11) JBAS014134: EJB Invocation failed on component
+		 *       EventsDao for method public void
+		 *       pl.vgtworld.test.ejbtransactions.dao.EventsDao.createEvent(java.util.Date,java.lang.String):
+		 *       javax.ejb.EJBTransactionRolledbackException: org.hibernate.exception.ConstraintViolationException:
+		 *       could not execute statement
 		 * Caused by: javax.persistence.PersistenceException: org.hibernate.exception.ConstraintViolationException:
-		 *        could not execute statement
+		 *            could not execute statement
 		 * Caused by: org.hibernate.exception.ConstraintViolationException: could not execute statement
 		 * Caused by: com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException:
-		 *        Column 'event_name' cannot be null
+		 *            Column 'event_name' cannot be null
 		 */
 		events.saveEndEvent(); //not executed
 		return RESPONSE;
