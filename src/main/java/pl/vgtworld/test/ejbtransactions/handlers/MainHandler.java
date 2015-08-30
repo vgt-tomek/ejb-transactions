@@ -106,4 +106,18 @@ public class MainHandler {
 		return RESPONSE;
 	}
 
+	@GET
+	@Path("test-6")
+	public String fullFlowWitchCatchedEjbExceptionInside() {
+		events.saveFullFlowWithCatchedEjbException();
+		return RESPONSE;
+	}
+
+	@GET
+	@Path("test-7")
+	public String fullFlowWitchCatchedRuntimeExceptionInside() {
+		events.saveFullFlowWithCatchedRuntimeException();
+		return RESPONSE;
+	}
+
 }

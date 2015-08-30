@@ -41,4 +41,24 @@ public class EventsService {
 		}
 	}
 
+	public void saveFullFlowWithCatchedEjbException() {
+		saveStartEvent();
+		try {
+			throwEjbException(true);
+		} catch (MyEjbException e) {
+			LOGGER.warn("Catched ejb exception");
+		}
+		saveEndEvent();
+	}
+
+	public void saveFullFlowWithCatchedRuntimeException() {
+		saveStartEvent();
+		try {
+			throwRuntimeException(true);
+		} catch (MyRuntimeException e) {
+			LOGGER.warn("Catched runtime exception");
+		}
+		saveEndEvent();
+	}
+
 }
