@@ -139,4 +139,40 @@ public class MainHandler {
 		return RESPONSE;
 	}
 
+	@GET
+	@Path("test-9")
+	public String fullFlowWithPersistenceExceptionCatchedInsideDaoAsLastOperation() {
+		events.saveFullFlowWithPersistenceExceptionCatchedInsideDaoAsLastOperation(); //rollback
+		/**
+		 * Despite no stack trace in logs transaction is rolled back.
+		 *
+		 * INFO  [pl.vgtworld.test.ejbtransactions.services.EventsService] (default task-14) Save start event
+		 * WARN  [org.hibernate.engine.jdbc.spi.SqlExceptionHelper] (default task-14) SQL Error: 1048, SQLState: 23000
+		 * ERROR [org.hibernate.engine.jdbc.spi.SqlExceptionHelper] (default task-14) Column 'event_name' cannot be null
+		 * WARN  [pl.vgtworld.test.ejbtransactions.dao.EventsDao] (default task-14) Catched persistence exception
+		 */
+		return RESPONSE;
+	}
+
+	@GET
+	@Path("test-10")
+	public String fullFlowWithPersistenceExceptionCatchedInsideDaoAsMidleOperation() {
+		events.saveFullFlowWithPersistenceExceptionCatchedInsideDaoAsMiddleOperation(); //rollback
+		/**
+		 * INFO  [pl.vgtworld.test.ejbtransactions.services.EventsService] (default task-15) Save start event
+		 * WARN  [org.hibernate.engine.jdbc.spi.SqlExceptionHelper] (default task-15) SQL Error: 1048, SQLState: 23000
+		 * ERROR [org.hibernate.engine.jdbc.spi.SqlExceptionHelper] (default task-15) Column 'event_name' cannot be null
+		 * WARN  [pl.vgtworld.test.ejbtransactions.dao.EventsDao] (default task-15) Catched persistence exception
+		 * INFO  [pl.vgtworld.test.ejbtransactions.services.EventsService] (default task-15) Save end event
+		 * ERROR [org.jboss.as.ejb3] (default task-15) javax.ejb.EJBTransactionRolledbackException: JBAS011469:
+		 *       Transaction is required to perform this operation (either use a transaction or extended persistence context)
+		 * ERROR [org.jboss.as.ejb3.invocation] (default task-15) JBAS014134: EJB Invocation failed on component EventsDao
+		 *       for method public void pl.vgtworld.test.ejbtransactions.dao.EventsDao.createEvent(java.lang.String):
+		 *       javax.ejb.EJBTransactionRolledbackException: JBAS011469: Transaction is required to perform this operation
+		 *       (either use a transaction or extended persistence context)
+		 * Caused by: javax.persistence.TransactionRequiredException: JBAS011469: Transaction is required to perform
+		 *            this operation (either use a transaction or extended persistence context)
+		 */
+		return RESPONSE;
+	}
 }

@@ -8,7 +8,6 @@ import pl.vgtworld.test.ejbtransactions.exceptions.MyRuntimeException;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.persistence.PersistenceException;
 import java.util.Date;
 
 @Stateless
@@ -65,6 +64,17 @@ public class EventsService {
 
 	public void saveIncorrectEventThrowingPersistenceException() {
 		events.createEvent(new Date(), null);
+	}
+
+	public void saveFullFlowWithPersistenceExceptionCatchedInsideDaoAsLastOperation() {
+		saveStartEvent("save full flow with persistence exception catched inside dao as last operation");
+		events.createEventWithCatchingPersistenceException(new Date(), null);
+	}
+
+	public void saveFullFlowWithPersistenceExceptionCatchedInsideDaoAsMiddleOperation() {
+		saveStartEvent("save full flow with persistence exception catched inside dao as middle operation");
+		events.createEventWithCatchingPersistenceException(new Date(), null);
+		saveEndEvent();
 	}
 
 }
