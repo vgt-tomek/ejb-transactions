@@ -17,9 +17,9 @@ public class EventsService {
 	@EJB
 	private EventsDao events;
 
-	public void saveStartEvent() {
+	public void saveStartEvent(String name) {
 		LOGGER.info("Save start event");
-		events.createEvent("start");
+		events.createEvent("start " + name);
 	}
 
 	public void saveEndEvent() {
@@ -42,7 +42,7 @@ public class EventsService {
 	}
 
 	public void saveFullFlowWithCatchedEjbException() {
-		saveStartEvent();
+		saveStartEvent("full flow with catched ejb exception");
 		try {
 			throwEjbException(true);
 		} catch (MyEjbException e) {
@@ -52,7 +52,7 @@ public class EventsService {
 	}
 
 	public void saveFullFlowWithCatchedRuntimeException() {
-		saveStartEvent();
+		saveStartEvent("full flow with catched runtime exception");
 		try {
 			throwRuntimeException(true);
 		} catch (MyRuntimeException e) {

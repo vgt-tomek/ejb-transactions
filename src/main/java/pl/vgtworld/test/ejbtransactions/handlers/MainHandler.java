@@ -25,7 +25,7 @@ public class MainHandler {
 	@GET
 	@Path("test-1")
 	public String cleanFlow() {
-		events.saveStartEvent();
+		events.saveStartEvent("clean flow");
 		events.saveEndEvent();
 		return RESPONSE;
 	}
@@ -33,7 +33,7 @@ public class MainHandler {
 	@GET
 	@Path("test-2")
 	public String ejbExceptionBetweenCalls() {
-		events.saveStartEvent(); //rollback
+		events.saveStartEvent("ejb exception between calls"); //rollback
 		events.throwEjbException(true);
 		/**
 		 * ERROR [org.jboss.as.ejb3] (default task-41) javax.ejb.EJBTransactionRolledbackException
@@ -50,7 +50,7 @@ public class MainHandler {
 	@GET
 	@Path("test-3")
 	public String catchedEjbExceptionBetweenCalls() {
-		events.saveStartEvent(); //rollback
+		events.saveStartEvent("catched ejb exception between calls"); //rollback
 		try {
 			events.throwEjbException(true);
 			/**
@@ -71,7 +71,7 @@ public class MainHandler {
 	@GET
 	@Path("test-4")
 	public String runtimeExceptionBetweenCalls() {
-		events.saveStartEvent(); //rollback
+		events.saveStartEvent("runtime exception between calls"); //rollback
 		events.throwRuntimeException(true);
 		/**
 		 * ERROR [org.jboss.as.ejb3] (default task-39) javax.ejb.EJBTransactionRolledbackException
@@ -88,7 +88,7 @@ public class MainHandler {
 	@GET
 	@Path("test-5")
 	public String catchedRuntimeExceptionBetweenCalls() {
-		events.saveStartEvent(); //rollback
+		events.saveStartEvent("catched runtime exception between calls"); //rollback
 		try {
 			events.throwRuntimeException(true);
 			/**
