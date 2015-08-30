@@ -35,6 +35,14 @@ public class MainHandler {
 	public String ejbExceptionBetweenCalls() {
 		events.saveStartEvent(); //rollback
 		events.throwEjbException(true);
+		/**
+		 * ERROR [org.jboss.as.ejb3] (default task-41) javax.ejb.EJBTransactionRolledbackException
+		 * ERROR [org.jboss.as.ejb3.invocation] (default task-41) JBAS014134: EJB Invocation failed on component
+		 *       EventsService for method public void
+		 *       pl.vgtworld.test.ejbtransactions.services.EventsService.throwEjbException(boolean):
+		 *       javax.ejb.EJBTransactionRolledbackException
+		 * Caused by: pl.vgtworld.test.ejbtransactions.exceptions.MyEjbException
+		 */
 		events.saveEndEvent(); //not executed
 		return RESPONSE;
 	}
@@ -45,6 +53,14 @@ public class MainHandler {
 		events.saveStartEvent(); //rollback
 		try {
 			events.throwEjbException(true);
+			/**
+			 * ERROR [org.jboss.as.ejb3] (default task-40) javax.ejb.EJBTransactionRolledbackException
+			 * ERROR [org.jboss.as.ejb3.invocation] (default task-40) JBAS014134: EJB Invocation failed on component
+			 *       EventsService for method public void
+			 *       pl.vgtworld.test.ejbtransactions.services.EventsService.throwEjbException(boolean):
+			 *       javax.ejb.EJBTransactionRolledbackException
+			 * Caused by: pl.vgtworld.test.ejbtransactions.exceptions.MyEjbException
+			 */
 		} catch (MyEjbException e) {
 			LOGGER.warn("Catched ejb exception"); //not executed
 		}
@@ -57,6 +73,14 @@ public class MainHandler {
 	public String runtimeExceptionBetweenCalls() {
 		events.saveStartEvent(); //rollback
 		events.throwRuntimeException(true);
+		/**
+		 * ERROR [org.jboss.as.ejb3] (default task-39) javax.ejb.EJBTransactionRolledbackException
+		 * ERROR [org.jboss.as.ejb3.invocation] (default task-39) JBAS014134: EJB Invocation failed on component
+		 *       EventsService for method public void
+		 *       pl.vgtworld.test.ejbtransactions.services.EventsService.throwRuntimeException(boolean):
+		 *       javax.ejb.EJBTransactionRolledbackException
+		 * Caused by: pl.vgtworld.test.ejbtransactions.exceptions.MyRuntimeException
+		 */
 		events.saveEndEvent(); //not executed
 		return RESPONSE;
 	}
