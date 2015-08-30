@@ -18,6 +18,9 @@ public class EventsService {
 	@EJB
 	private EventsDao events;
 
+	@EJB
+	private SubService subservice;
+
 	public void saveStartEvent(String name) {
 		LOGGER.info("Save start event");
 		events.createEvent("start " + name);
@@ -75,6 +78,26 @@ public class EventsService {
 	public void saveFullFlowWithPersistenceExceptionCatchedInsideDaoAsMiddleOperation() {
 		saveStartEvent("save full flow with persistence exception catched inside dao as middle operation");
 		events.createEventWithCatchingPersistenceException(new Date(), null);
+		saveEndEvent();
+	}
+
+	public void saveFullFlowWithCatchedEjbExceptionFromSubservice() {
+		saveStartEvent("save full flow with catched ejb exception from subservice");
+		try {
+			subservice.throwEjbException(true);
+		} catch (MyEjbException e) {
+			LOGGER.warn("Catched ejb exception");
+		}
+		saveEndEvent();
+	}
+
+	public void saveFullFlowWithCatchedRuntimeExceptionFromSubservice() {
+		saveStartEvent("save full flow with catched runtime exception from subservice");
+		try {
+			subservice.throwRuntimeException(true);
+		} catch (MyRuntimeException e) {
+			LOGGER.warn("Catched runtime exception");
+		}
 		saveEndEvent();
 	}
 

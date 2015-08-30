@@ -208,4 +208,38 @@ public class MainHandler {
 		 */
 		return RESPONSE;
 	}
+
+	@GET
+	@Path("test-11")
+	public String fullFlowWithCatchedEjbExceptionFromSubservice() {
+		events.saveFullFlowWithCatchedEjbExceptionFromSubservice(); //rollback
+		/**
+		 * INFO  [pl.vgtworld.test.ejbtransactions.services.EventsService] (default task-15) Save start event
+		 * INFO  [pl.vgtworld.test.ejbtransactions.services.SubService] (default task-15) Subservice throw ejb exception: true
+		 * ERROR [org.jboss.as.ejb3] (default task-15) javax.ejb.EJBTransactionRolledbackException
+		 * ERROR [org.jboss.as.ejb3.invocation] (default task-15) JBAS014134:
+		 *       EJB Invocation failed on component SubService for method
+		 *       public void pl.vgtworld.test.ejbtransactions.services.SubService.throwEjbException(boolean):
+		 *       javax.ejb.EJBTransactionRolledbackException
+		 * Caused by: pl.vgtworld.test.ejbtransactions.exceptions.MyEjbException
+		 */
+		return RESPONSE;
+	}
+
+	@GET
+	@Path("test-12")
+	public String fullFlowWithCatchedRuntimeExceptionFromSubservice() {
+		events.saveFullFlowWithCatchedRuntimeExceptionFromSubservice(); //rollback
+		/**
+		 * INFO  [pl.vgtworld.test.ejbtransactions.services.EventsService] (default task-16) Save start event
+		 * INFO  [pl.vgtworld.test.ejbtransactions.services.SubService] (default task-16) Subservice throw runtime exception: true
+		 * ERROR [org.jboss.as.ejb3] (default task-16) javax.ejb.EJBTransactionRolledbackException
+		 * ERROR [org.jboss.as.ejb3.invocation] (default task-16) JBAS014134:
+		 *       EJB Invocation failed on component SubService for method
+		 *       public void pl.vgtworld.test.ejbtransactions.services.SubService.throwRuntimeException(boolean):
+		 *       javax.ejb.EJBTransactionRolledbackException
+		 * Caused by: pl.vgtworld.test.ejbtransactions.exceptions.MyRuntimeException
+		 */
+		return RESPONSE;
+	}
 }
