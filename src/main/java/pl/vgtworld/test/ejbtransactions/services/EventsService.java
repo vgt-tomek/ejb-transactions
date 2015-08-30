@@ -8,6 +8,8 @@ import pl.vgtworld.test.ejbtransactions.exceptions.MyRuntimeException;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.persistence.PersistenceException;
+import java.util.Date;
 
 @Stateless
 public class EventsService {
@@ -59,6 +61,10 @@ public class EventsService {
 			LOGGER.warn("Catched runtime exception");
 		}
 		saveEndEvent();
+	}
+
+	public void saveIncorrectEventThrowingPersistenceException() {
+		events.createEvent(new Date(), null);
 	}
 
 }

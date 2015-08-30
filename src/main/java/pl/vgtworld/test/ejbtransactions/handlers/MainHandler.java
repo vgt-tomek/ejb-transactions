@@ -120,4 +120,23 @@ public class MainHandler {
 		return RESPONSE;
 	}
 
+	@GET
+	@Path("test-8")
+	public String persistenceExceptionBetweenCalls() {
+		events.saveStartEvent("persistence exception between calls"); //rollback
+		events.saveIncorrectEventThrowingPersistenceException();
+		/**
+		 * ERROR [org.hibernate.engine.jdbc.spi.SqlExceptionHelper] (default task-2) Column 'event_name' cannot be null
+		 * ERROR [org.jboss.as.ejb3] (default task-2) javax.ejb.EJBTransactionRolledbackException:
+		 *       org.hibernate.exception.ConstraintViolationException: could not execute statement
+		 * Caused by: javax.persistence.PersistenceException: org.hibernate.exception.ConstraintViolationException:
+		 *        could not execute statement
+		 * Caused by: org.hibernate.exception.ConstraintViolationException: could not execute statement
+		 * Caused by: com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException:
+		 *        Column 'event_name' cannot be null
+		 */
+		events.saveEndEvent(); //not executed
+		return RESPONSE;
+	}
+
 }
