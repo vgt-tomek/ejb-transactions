@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import pl.vgtworld.test.ejbtransactions.exceptions.MyEjbException;
 import pl.vgtworld.test.ejbtransactions.exceptions.MyRuntimeException;
 import pl.vgtworld.test.ejbtransactions.services.EventsService;
+import pl.vgtworld.test.ejbtransactions.services.SamplesService;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -21,6 +22,9 @@ public class MainHandler {
 
 	@EJB
 	private EventsService events;
+
+	@EJB
+	private SamplesService samples;
 
 	@GET
 	@Path("test-1")
@@ -261,6 +265,34 @@ public class MainHandler {
 		 * Caused by: pl.vgtworld.test.ejbtransactions.exceptions.MyEjbException
 		 */
 		events.saveEndEvent(); //not executed
+		return RESPONSE;
+	}
+
+	@GET
+	@Path("test-14")
+	/**
+	 * INFO  [pl.vgtworld.test.ejbtransactions.services.EventsService] (default task-5) Save start event
+	 * WARN  [pl.vgtworld.test.ejbtransactions.dao.SamplesDao] (default task-5) No result exception for type: 6
+	 * INFO  [pl.vgtworld.test.ejbtransactions.services.EventsService] (default task-5) Save end event
+	 */
+	public String fullFlowWithCatchedNoResultException() {
+		events.saveStartEvent("full flow with catched NoResultException");
+		samples.findSingleSampleByTypeWithNoResultExceptionCatched(6);
+		events.saveEndEvent();
+		return RESPONSE;
+	}
+
+	@GET
+	@Path("test-15")
+	/**
+	 * INFO  [pl.vgtworld.test.ejbtransactions.services.EventsService] (default task-6) Save start event
+	 * WARN  [pl.vgtworld.test.ejbtransactions.dao.SamplesDao] (default task-6) No unique result exception for type: 4
+	 * INFO  [pl.vgtworld.test.ejbtransactions.services.EventsService] (default task-6) Save end event
+	 */
+	public String fullFlowWithCatchedNoUniqueResultException() {
+		events.saveStartEvent("full flow with catched NoUniqueResultException");
+		samples.findSingleSampleByTypeWithNoUniqueResultExceptionCatched(4);
+		events.saveEndEvent();
 		return RESPONSE;
 	}
 }
